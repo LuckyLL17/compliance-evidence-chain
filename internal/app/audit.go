@@ -29,7 +29,7 @@ func (s *Service) recordLocked(action string, subject domain.ID, actor, payload 
 		ID:        domain.ID(platform.NewID("event")),
 		Kind:      action,
 		SubjectID: subject,
-		Actor:     "",
+		Actor:     actor,
 		Payload:   payload,
 		CreatedAt: now,
 	})

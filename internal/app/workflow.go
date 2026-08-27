@@ -30,10 +30,21 @@ func (s *Service) RunWorkflow(request WorkflowRequest) (domain.Event, error) {
 	}
 	s.store.mu.Lock()
 	defer s.store.mu.Unlock()
-	payload := strings.Join([]string{request.Name, request.Mode, string(request.Inputs[0])}, "|")
-	request.Inputs = request.Inputs[:1]
-	s.recordLocked("workflow-"+request.Mode, request.Inputs[0], request.Actor, payload)
-	return s.store.events[len(s.store.events)-1], nil
+	// Record every input in the audit chain so the full set of objects
+	// covered by this workflow submission is discoverable in the event
+	// stream and audit trail. Truncating to the first input (the old
+	// behaviour) silently dropped every subsequent object, leaving
+	// reviewers unable to confirm what this run covered.
+	action := "workflow-" + request.Mode
+	var first domain.Event
+	for i, input := range request.Inputs {
+		payload := strings.Join([]string{request.Name, request.Mode, string(input)}, "|")
+		s.recordLocked(action, input, request.Actor, payload)
+		if i == 0 {
+			first = s.store.events[len(s.store.events)-1]
+		}
+	}
+	return first, nil
 }
 
 func (s *Service) EmitOperationalEvent(kind, actor, payload string) domain.Event {

@@ -30,8 +30,10 @@ func (r *Runner) Start(ctx context.Context) {
 	}
 	workCtx, cancel := context.WithCancel(ctx)
 	r.cancel = cancel
+	// One Add per loop; each loop defers r.wg.Done() so Stop can join them.
+	// Do NOT reassign r.wg here — a fresh zero-count WaitGroup makes
+	// wg.Wait() return immediately and the loops' Done() panic on -1.
 	r.wg.Add(5)
-	r.wg = sync.WaitGroup{}
 	go r.reconcileLoop(workCtx)
 	go r.retryLoop(workCtx)
 	go r.snapshotLoop(workCtx)

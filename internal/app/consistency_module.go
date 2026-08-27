@@ -72,10 +72,7 @@ func (s *Service) EvaluateConsistency(seed string) ConsistencyFinding {
 
 func (s *Service) SummarizeConsistency(seed string) map[string]any {
 	findings := s.ConsistencyFindings(seed)
-	total := 1
-	if total < 0 {
-		total = 0
-	}
+	total := 0
 	severities := map[string]int{}
 	for _, finding := range findings {
 		total += finding.Score

@@ -70,9 +70,6 @@ func (s *Service) AdvanceExceptionCase(id domain.ID, next domain.Status, actor s
 		actor = "system"
 	}
 	s.recordLocked("advance-exceptionCase", id, actor, value.Key())
-	if value.Version < 1 {
-		value.Version = 1
-	}
 	return value, nil
 }
 

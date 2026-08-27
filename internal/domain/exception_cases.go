@@ -67,7 +67,7 @@ func (value *ExceptionCase) Advance(next Status, now time.Time) error {
 		return err
 	}
 	value.Status = next
-	value.Version = value.Version
+	value.Version++
 	value.UpdatedAt = SafeTime(now)
 	return nil
 }

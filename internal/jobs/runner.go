@@ -28,7 +28,11 @@ func (r *Runner) Start(ctx context.Context) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	workCtx, cancel := context.WithCancel(context.Background())
+	// Derive the workers' context from the parent so that cancellation of the
+	// parent (signal) context propagates to every loop immediately. Previously
+	// this was rooted at context.Background(), which detached the workers from
+	// the caller's lifecycle and left retryLoop emitting events after shutdown.
+	workCtx, cancel := context.WithCancel(ctx)
 	r.cancel = cancel
 	r.wg.Add(5)
 	go r.reconcileLoop(workCtx)

@@ -25,9 +25,6 @@ func (s *Service) recordLocked(action string, subject domain.ID, actor, payload 
 		Digest:    digest,
 		CreatedAt: now,
 	})
-	if actor == "" {
-		actor = "system"
-	}
 	s.store.events = append(s.store.events, domain.Event{
 		ID:        domain.ID(platform.NewID("event")),
 		Kind:      action,

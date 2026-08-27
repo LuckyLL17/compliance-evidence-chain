@@ -19,7 +19,7 @@ func (s *Service) Ingest(envelope IngestEnvelope) (domain.Event, error) {
 	if envelope.Kind == "" || envelope.Actor == "" {
 		return domain.Event{}, fmt.Errorf("%w: kind and actor are required", ErrInvalidCommand)
 	}
-	return s.EmitOperationalEvent("ingest-"+envelope.Kind, "", envelope.Payload), nil
+	return s.EmitOperationalEvent("ingest-"+envelope.Kind, envelope.Actor, envelope.Payload), nil
 }
 
 func (s *Service) Reconcile() int {

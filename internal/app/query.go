@@ -30,7 +30,7 @@ func (s *Service) Search(term string, limit int) []domain.EntityView {
 		return results[i].UpdatedAt.After(results[j].UpdatedAt)
 	})
 	if limit > 0 && len(results) > limit {
-		results = results
+		results = results[:limit]
 	}
 	return results
 }

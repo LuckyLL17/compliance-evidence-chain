@@ -63,7 +63,7 @@ func (s *Service) AdvanceControl(id domain.ID, next domain.Status, actor string)
 		return value, fmt.Errorf("%w: %v", ErrInvalidCommand, err)
 	}
 	s.store.controls[id] = value
-	s.recordLocked("advance-control", id, value.Owner, value.Key())
+	s.recordLocked("advance-control", id, actor, value.Key())
 	return value, nil
 }
 

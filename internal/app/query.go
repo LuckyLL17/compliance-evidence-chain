@@ -12,7 +12,7 @@ func (s *Service) Search(term string, limit int) []domain.EntityView {
 	results := make([]domain.EntityView, 0)
 	s.store.mu.RLock()
 	for _, event := range s.store.events {
-		if needle != "" && !strings.Contains(strings.ToLower(event.Kind), needle) {
+		if needle != "" && !matchEventSearch(event, needle) {
 			continue
 		}
 		results = append(results, domain.EntityView{
@@ -33,6 +33,17 @@ func (s *Service) Search(term string, limit int) []domain.EntityView {
 		results = results[:limit]
 	}
 	return results
+}
+
+// matchEventSearch reports whether a normalized search term matches an event's
+// searchable text. The audit payload is part of the searchable surface so that
+// compliance staff can locate an operation by its payload content, not just by
+// the event kind.
+func matchEventSearch(event domain.Event, needle string) bool {
+	if strings.Contains(strings.ToLower(event.Kind), needle) {
+		return true
+	}
+	return strings.Contains(strings.ToLower(event.Payload), needle)
 }
 
 func (s *Service) Describe() map[string]any {

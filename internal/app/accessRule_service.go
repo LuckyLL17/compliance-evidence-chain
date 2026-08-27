@@ -63,7 +63,7 @@ func (s *Service) AdvanceAccessRule(id domain.ID, next domain.Status, actor stri
 		return value, fmt.Errorf("%w: %v", ErrInvalidCommand, err)
 	}
 	s.store.access_rules[id] = value
-	s.recordLocked("advance-accessRule", id, value.Owner, value.Key())
+	s.recordLocked("advance-accessRule", id, actor, value.Key())
 	return value, nil
 }
 

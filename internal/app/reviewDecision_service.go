@@ -69,7 +69,7 @@ func (s *Service) AdvanceReviewDecision(id domain.ID, next domain.Status, actor 
 	if actor == "" {
 		actor = "system"
 	}
-	// BUG: updated map value is not persisted
+	s.store.review_decisions[id] = value
 	s.recordLocked("advance-reviewDecision", id, actor, value.Key())
 	return value, nil
 }

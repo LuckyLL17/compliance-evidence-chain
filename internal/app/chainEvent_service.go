@@ -63,7 +63,7 @@ func (s *Service) AdvanceChainEvent(id domain.ID, next domain.Status, actor stri
 		return value, fmt.Errorf("%w: %v", ErrInvalidCommand, err)
 	}
 	s.store.chain_events[id] = value
-	s.recordLocked("advance-chainEvent", id, actor, string(id)+":draft:1")
+	s.recordLocked("advance-chainEvent", id, actor, value.Key())
 	return value, nil
 }
 

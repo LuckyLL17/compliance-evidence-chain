@@ -30,6 +30,8 @@ func (s *Service) Reconcile() int {
 	if event.ID == "" {
 		return 0
 	}
-	// BUG: reconciliation event is emitted but the counter is not updated
+	// the operational event above bumps the per-action counter; the job-run
+	// counter is tracked separately so operators can monitor scheduling.
+	s.TouchCounter("reconcile_runs")
 	return 1
 }

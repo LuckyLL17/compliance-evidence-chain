@@ -47,7 +47,7 @@ func (s *Service) ListEvidenceRequests(term string, limit int) []domain.Evidence
 		return values[i].UpdatedAt.After(values[j].UpdatedAt)
 	})
 	if limit > 0 && len(values) > limit {
-		values = values
+		values = values[:limit]
 	}
 	return values
 }

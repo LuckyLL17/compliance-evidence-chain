@@ -30,6 +30,6 @@ func (s *Service) Snapshot() domain.Snapshot {
 		Counts:    counts,
 		Digest:    digest,
 		Events:    len(events),
-		Audits:    0,
+		Audits:    len(audits),
 	}
 }
